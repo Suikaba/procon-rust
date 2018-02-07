@@ -1,10 +1,11 @@
-use std::vec;
+//use std::vec::Vec;
 
 struct UnionFind {
-    par: vec::Vec<i32>,
+    par: Vec<i32>,
 }
 
 impl UnionFind {
+    #[allow(dead_code)]
     fn new(n: usize) -> UnionFind {
         UnionFind {
             par: vec![-1; n],
@@ -12,45 +13,42 @@ impl UnionFind {
     }
 
     #[allow(dead_code)]
-    fn root(&mut self, x: i32) -> i32 {
-        let x_id = x as usize;
-        if self.par[x_id] < 0 {
+    fn root(&mut self, x: usize) -> usize {
+        if self.par[x] < 0 {
             x
         } else {
-            let p = self.par[x_id];
-            self.par[x_id] = self.root(p);
-            self.par[x_id]
+            let p = self.par[x] as usize;
+            self.par[x] = self.root(p) as i32;
+            self.par[x] as usize
         }
     }
 
     #[allow(dead_code)]
-    fn unite(&mut self, x: i32, y: i32) -> bool {
+    fn unite(&mut self, x: usize, y: usize) -> bool {
         let x = self.root(x);
         let y = self.root(y);
         if x == y {
             false
         } else {
-            let x_id = x as usize;
-            let y_id = y as usize;
             if self.size(x) < self.size(y) {
-                self.par[y_id] = self.par[y_id] + self.par[x_id];
-                self.par[x_id] = y;
+                self.par[y] += self.par[x];
+                self.par[x] = y as i32; // usize <-> i32
             } else {
-                self.par[x_id] = self.par[x_id] + self.par[y_id];
-                self.par[y_id] = x;
+                self.par[x] += self.par[y];
+                self.par[y] = x as i32;
             }
             true
         }
     }
 
     #[allow(dead_code)]
-    fn same(&mut self, x: i32, y: i32) -> bool {
+    fn same(&mut self, x: usize, y: usize) -> bool {
         self.root(x) == self.root(y)
     }
 
     #[allow(dead_code)]
-    fn size(&mut self, x: i32) -> i32 {
-        let r = self.root(x) as usize;
-        -self.par[r]
+    fn size(&mut self, x: usize) -> usize {
+        let r = self.root(x);
+        (-self.par[r]) as usize
     }
 }
