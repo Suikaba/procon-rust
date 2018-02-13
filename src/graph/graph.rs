@@ -46,8 +46,10 @@ impl Ord for WeightedEdge {
 ///
 ///
 ///
-trait Graph<E: Edge> {
-    fn edges(&self, v: usize) -> &std::vec::Vec<E>;
+trait Graph {
+    type V;
+    type E: Edge + Sized;
+    fn edges(&self, v: Self::V) -> &std::vec::Vec<Self::E>;
     fn node_size(&self) -> usize;
 }
 
@@ -69,7 +71,9 @@ impl WeightedGraph {
     }
 }
 
-impl Graph<WeightedEdge> for WeightedGraph {
+impl Graph for WeightedGraph {
+    type V = usize;
+    type E = WeightedEdge;
     fn edges(&self, v: usize) -> &std::vec::Vec<WeightedEdge> {
         &self.adj_list[v]
     }

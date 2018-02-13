@@ -1,15 +1,12 @@
-//use std::vec::Vec;
-struct StronglyConnectedComponent<E: Edge, G: Graph<E> + Clone> {
+struct StronglyConnectedComponent<G: Graph + Clone> {
     g: G,
     comp: Vec<usize>,
     k: usize,
-
-    phantom: std::marker::PhantomData<E>,
 }
 
 #[allow(dead_code)]
-impl<E: Edge, G: Graph<E> + Clone> StronglyConnectedComponent<E, G> {
-    fn new(g: &G) -> StronglyConnectedComponent<E, G> {
+impl<G: Graph<V = usize> + Clone> StronglyConnectedComponent<G> {
+    fn new(g: &G) -> StronglyConnectedComponent<G> {
         let mut rg: Vec<Vec<usize>> = vec![Vec::<usize>::new(); g.node_size()];
         for v in 0..g.node_size() {
             for e in g.edges(v) {
@@ -17,7 +14,7 @@ impl<E: Edge, G: Graph<E> + Clone> StronglyConnectedComponent<E, G> {
             }
         }
 
-        fn dfs<E: Edge>(g: &Graph<E>, v: usize, vs: &mut Vec<usize>, used: &mut Vec<bool>) {
+        fn dfs<G: Graph<V = usize>>(g: &G, v: usize, vs: &mut Vec<usize>, used: &mut Vec<bool>) {
             used[v] = true;
             for e in g.edges(v) {
                 if !used[e.to()] {
@@ -53,11 +50,10 @@ impl<E: Edge, G: Graph<E> + Clone> StronglyConnectedComponent<E, G> {
             }
         }
 
-        StronglyConnectedComponent::<E, G> {
+        StronglyConnectedComponent::<G> {
             g: g.clone(),
             comp: comp,
-            k: k,
-            phantom: std::marker::PhantomData,
+            k: k
         }
     }
 

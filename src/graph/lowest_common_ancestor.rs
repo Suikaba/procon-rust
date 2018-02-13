@@ -7,7 +7,7 @@ struct LowestCommonAncestor {
 
 #[allow(dead_code)]
 impl LowestCommonAncestor {
-    fn new<E: Edge, G: Graph<E>>(t: &G, root: usize) -> LowestCommonAncestor {
+    fn new<G: Graph<V = usize>>(t: &G, root: usize) -> LowestCommonAncestor {
         let mut n = t.node_size();
         let mut log_n: usize = 0;
         while n > 0 {
@@ -17,7 +17,7 @@ impl LowestCommonAncestor {
         let log_n = log_n;
         let n = t.node_size();
 
-        fn dfs<E: Edge>(t: &Graph<E>, v: usize, p: Option<usize>, d: usize, parent: &mut Vec<Vec<Option<usize>>>, depth: &mut Vec<usize>) {
+        fn dfs<G: Graph<V = usize>>(t: &G, v: usize, p: Option<usize>, d: usize, parent: &mut Vec<Vec<Option<usize>>>, depth: &mut Vec<usize>) {
             parent[0][v] = p;
             depth[v] = d;
             for e in t.edges(v) {
