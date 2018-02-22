@@ -43,7 +43,8 @@ impl<G: Group> FenwickTree<G> {
         res
     }
     /// [l..r)
-    fn query(&self, l: i32, r: i32) -> G::T {
+    fn query(&self, l: usize, r: usize) -> G::T {
+        let (l, r) = (l as i32, r as i32);
         G::op(&self.query1(r - 1), &G::inverse(&self.query1(l - 1)))
     }
 }
